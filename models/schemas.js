@@ -207,6 +207,8 @@ const siteSettingSchema = new mongoose.Schema({
     landingImageOne: String,
     landingImageTwo: String,
     landingImageThree: String,
+    landingImageFour: String,
+    landingImageFive: String,
     profilePicture: String,
     profileThumbnail: String,
     curriculumVitae: String,

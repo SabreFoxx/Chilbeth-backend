@@ -29,7 +29,9 @@ const saveSettings = function (req, res) {
                         siteLogo: req.body.siteLogo,
                         landingImageOne: req.body.landingImageOne,
                         landingImageTwo: req.body.landingImageTwo,
-                        landingImageThree: req.body.landingImageThree
+                        landingImageThree: req.body.landingImageThree,
+                        landingImageFour: req.body.landingImageFour,
+                        landingImageFive: req.body.landingImageFive
                     }, (err, newRecord) => {
                         if (err) res.status(500).json(err);
                         else {
@@ -46,6 +48,10 @@ const saveSettings = function (req, res) {
                         settings.landingImageTwo = req.body.landingImageTwo;
                     if (req.body.landingImageThree !== '')
                         settings.landingImageThree = req.body.landingImageThree;
+                    if (req.body.landingImageFour !== '')
+                        settings.landingImageFour = req.body.landingImageFour;
+                    if (req.body.landingImageFive !== '')
+                        settings.landingImageFive = req.body.landingImageFive;
                     if (req.body.profilePicture !== '')
                         settings.profilePicture = req.body.profilePicture;
                     if (req.body.profileThumbnail !== '')
