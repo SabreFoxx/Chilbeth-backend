@@ -132,10 +132,11 @@ const upload = (req, res) => {
     let savingTechnique = (file, sortingHash, author) => {
         // 'file' is an object that encapsulates the newly uploaded file
         // We resize the uploaded image to two versions
-        // 450x300 has the aspect ratio 1.5:1 or 3:2
-        resize(file.path, 450, 300, `small/${sortingHash}`); // This is an asynchronous call, so if it doesn't complete before the next, we are in trouble. OMG I'm so lazy
-        // 1080x720 has the aspect ratio 1.5:1 or 3:2
-        resize(file.path, 1080, 720, `big/${sortingHash}`, (originalPathToDelete) => {  // aspect ratio 3:2
+        const [width, height] = figureOutProperImageDimensions(file.path);
+        // e.g 450x300 has the aspect ratio 1.5:1 or 3:2
+        resize(file.path, Math.round(width / 3), Math.round(height / 3), `small/${sortingHash}`); // This is an asynchronous call, so if it doesn't complete before the next, we are in trouble. OMG I'm so lazy
+        // e.g 1080x720 has the aspect ratio 1.5:1 or 3:2
+        resize(file.path, width, height, `big/${sortingHash}`, (originalPathToDelete) => {  // aspect ratio 3:2
             moveFilesToMongoDB(sortingHash, author, (err, picture) => { // Then save the resized versions to the database
                 fs.unlinkSync(originalPathToDelete); // Delete original image file (the large image that just got uploaded)
                 // When we successfully added the image to the database
@@ -170,8 +171,10 @@ const uploadAndDelete = (req, res) => {
         // and separated by '#'
         sortingHashes = sortingHashes.split('#');
         sortingHash = sortingHashes[0];
-        resize(file.path, 450, 300, `small/${sortingHash}`);
-        resize(file.path, 1080, 720, `big/${sortingHash}`, (originalPathToDelete) => {
+
+        const [width, height] = figureOutProperImageDimensions(file.path);
+        resize(file.path, Math.round(width / 3), Math.round(height / 3), `small/${sortingHash}`); // This is an asynchronous call, so if it doesn't complete before the next, we are in trouble. OMG I'm so lazy
+        resize(file.path, width, height, `big/${sortingHash}`, (originalPathToDelete) => {
             moveFilesToMongoDB(sortingHash, author, (err, picture) => {
                 fs.unlinkSync(originalPathToDelete);
                 deleteFile(`small/${sortingHash}`);
@@ -197,17 +200,8 @@ const uploadAndDelete = (req, res) => {
 // Performs image upload for artworks
 const uploadArtwork = (req, res) => {
     let savingTechnique = (file, sortingHash, author) => {
-        const dimensions = checkImageDimension(file.path);
-        const aspectRatio = dimensions.width / dimensions.height;
-        let height, width = 0;
-        if (dimensions.width > dimensions.height) {
-            width = 1080;
-            height = ratioHeightFromWidth(aspectRatio, 1, width);
-        } else {
-            height = 1080;
-            width = ratioWidthFromHeight(aspectRatio, 1, height);
-        }
-        resize(file.path, 450, 300, `small/${sortingHash}`);
+        const [width, height] = figureOutProperImageDimensions(file.path);
+        resize(file.path, Math.round(width / 3), Math.round(height / 3), `small/${sortingHash}`);
         resize(file.path, width, height, `big/${sortingHash}`, (originalPathToDelete) => {
             moveFilesToMongoDB(sortingHash, author, (err, picture) => {
                 fs.unlinkSync(originalPathToDelete);
@@ -386,6 +380,20 @@ function ratioHeightFromWidth(firstNumber, secondNumber, width) {
    */
 function ratioWidthFromHeight(firstNumber, secondNumber, height) {
     return (height / secondNumber) * firstNumber;
+}
+
+function figureOutProperImageDimensions(filePath) {
+    const dimensions = checkImageDimension(filePath);
+    const aspectRatio = dimensions.width / dimensions.height;
+    let width, height = 0;
+    if (dimensions.width > dimensions.height) {
+        width = 1080;
+        height = ratioHeightFromWidth(aspectRatio, 1, width);
+    } else {
+        height = 1080;
+        width = ratioWidthFromHeight(aspectRatio, 1, height);
+    }
+    return [Math.round(width), Math.round(height)];
 }
 
 module.exports = {
