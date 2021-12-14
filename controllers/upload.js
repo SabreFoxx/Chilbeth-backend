@@ -5,49 +5,38 @@ const CurriculumVitai = mongoose.model("CurriculumVitai");
 const formidable = require('formidable');
 const fs = require('fs');
 const doAsync = require('doasync'); // To read bigImagePath asynchronously
-// const sharp = require('sharp'); // I replaced this with jimp
-const Jimp = require('jimp');
+const sharp = require('sharp');
+// const jimp = require('jimp'); // I'm using sharp instead of jimp
 const checkImageDimension = require('image-size');
 
 function resize(path, width, height, outputName, callback = () => { }) {
     const outputImagePath = __dirname + '/../public/images/uploads/' + outputName + ".jpg";
 
-    /* Sharp uses native binaries, and I don't know why that makes it stop randomly on glitch.com */
-    // sharp(path)
-    //     .toFormat(format)
-    //     .resize(width, height)
-    //     .toFile(outputImagePath)
-    //     .then(() => {
-    //         callback(path);
-    //     }).
-    //     catch(() => {
-    //         // res.status(CONSTANTS.SERVER_OK_HTTP_CODE).json({
-    //         //     error: true,
-    //         //     message: CONSTANTS.SERVER_ERROR_MESSAGE
-    //         // });
-    //         return false;
-    //     });
-
-    // With callback
-    // Jimp.read(path, (err, image) => {
-    //     if (err) throw err;
-    //     image // image is automatically jpg
-    //         .resize(width, height)
-    //         .quality(60)
-    //         .write(outputImagePath);
-    //     callback(path);
-    // });
+    /* sharp uses native binaries, and I don't know why that makes it stop randomly on glitch.com */
+    // but because I'm now deploying on an EC2 container, I can use sharp
+    sharp(path)
+        .toFormat('jpg')
+        .resize(width, height)
+        .toFile(outputImagePath)
+        .then(() => {
+            callback(path);
+        }).
+        catch(err => {
+            console.log('Image upload in upload.js failed', err)
+            return false;
+            // TODO no continuity when fail
+        });
 
     // With promise
-    Jimp.read(path)
-        .then(image => { // image will be automatically encoded in jpg
-            if (image
-                .resize(width, height)
-                .quality(60)
-                .write(outputImagePath))
-                callback(path);
-        })
-        .catch(err => console.log('Image upload in upload.js failed'));
+    // jimp.read(path)
+    //     .then(image => { // image will be automatically encoded in jpg
+    //         if (image
+    //             .resize(width, height)
+    //             .quality(60)
+    //             .write(outputImagePath))
+    //             callback(path);
+    //     })
+    //     .catch(err => console.log('Image upload in upload.js failed', err)); // TODO no continuity when fail
 }
 
 function deleteFile(name) {
