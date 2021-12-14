@@ -1,10 +1,10 @@
 var createError = require('http-errors');
 var express = require('express');
-var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var passport = require('passport');
-require('dotenv').config(); // Enables usage of .env environment variables
+var path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, './.env') });
 require('./models/db'); // Database setup and schemas
 require('./config/passport'); // Passport setup
 
