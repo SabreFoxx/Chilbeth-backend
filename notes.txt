@@ -1,0 +1,8 @@
+** Starting server with pm2:
+- copy and paste .env file
+- Ensure to configure .env like so because we're starting our within a shell by running /bin/www:
+  "path.resolve(__dirname, './.env')" makes sure we correctly find our .env file in the shell
+  var path = require('path');
+  require('dotenv').config({ path: path.resolve(__dirname, './.env') });
+- Run
+  pm2 start ~/path/to/Chilbeth-backend/bin/www --name chilbeth --cron-restart="5 8 * * Sun" --max-memory-restart 500M --restart-delay=2000 --exp-backoff-restart-delay=100 --watch ~/path/to/Chilbeth-backend
