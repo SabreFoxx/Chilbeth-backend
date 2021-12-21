@@ -2,16 +2,16 @@ pipeline {
 	agent { label 'nodejs-docker-label' }
 	options { timeout (time: 30) }
 	stages {
-		stage('install') {
+		stage('build') {
 			steps {
 				sh 'npm clean-install'
 			}
 		}
-		stage('start-server') {
+		stage('install') {
 			steps {
 				fileOperations([folderCopyOperation(
                     sourceFolderPath: './',
-                    destinationFolderPath: '/home/jenkins/mount-to-host-folder/Chilbeth'
+                    destinationFolderPath: '/home/jenkins/mount-to-host-folder/Chilbeth-backend'
                 )])
 			}
 		}
