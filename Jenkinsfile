@@ -1,5 +1,5 @@
 pipeline {
-	agent { label 'node-app-agent-image' }
+	agent { label 'nodejs-docker-label' }
 	options { timeout (time: 30) }
 	stages {
 		stage('install') {
