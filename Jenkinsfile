@@ -9,9 +9,7 @@ pipeline {
 		}
 		stage('install') {
 			steps {
-				fileOperations([fileDeleteOperation(
-                    includes: '/home/jenkins/mount-to-host-folder/Chilbeth-backend/**'
-                ),folderCopyOperation(
+				fileOperations([folderCopyOperation(
                     sourceFolderPath: './',
                     destinationFolderPath: '/home/jenkins/mount-to-host-folder/Chilbeth-backend'
                 )])
