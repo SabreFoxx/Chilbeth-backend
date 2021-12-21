@@ -9,6 +9,7 @@ pipeline {
 		}
 		stage('install') {
 			steps {
+                // pm2 is waiting to restart server
 				fileOperations([folderCopyOperation(
                     sourceFolderPath: './',
                     destinationFolderPath: '/home/jenkins/mount-to-host-folder/Chilbeth-backend'

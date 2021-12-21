@@ -7,6 +7,10 @@
 var app = require('../app');
 var debug = require('debug')('chilbeth-backend:server');
 var http = require('http');
+var https = require('https');
+var fs = require('fs');
+var path = require('path');
+require('dotenv').config({ path: path.resolve(__dirname, './.env') });
 
 /**
  * Get port from environment and store in Express.
@@ -18,8 +22,10 @@ app.set('port', port);
 /**
  * Create HTTP server.
  */
-
-var server = http.createServer(app);
+var server = process.env.SSL_CERTIFICATE_PATH ? https.createServer({
+  key: fs.readFileSync(`${process.env.SSL_CERTIFICATE_PATH}/privkey.pem`),
+  cert: fs.readFileSync(`${process.env.SSL_CERTIFICATE_PATH}/fullchain.pem`)
+}, app) : http.createServer(app);
 
 /**
  * Listen on provided port, on all network interfaces.
