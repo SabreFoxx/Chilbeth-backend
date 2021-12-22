@@ -136,7 +136,7 @@ const upload = (req, res) => {
         // e.g 450x300 has the aspect ratio 1.5:1 or 3:2
         resize(file.path, Math.round(width / 3), Math.round(height / 3), `small/${sortingHash}`); // This is an asynchronous call, so if it doesn't complete before the next, we are in trouble. OMG I'm so lazy
         // e.g 1080x720 has the aspect ratio 1.5:1 or 3:2
-        resize(file.path, width, height, `big/${sortingHash}`, (originalPathToDelete) => {  // aspect ratio 3:2
+        resize(file.path, Math.round(width / 2), Math.round(height / 2), `big/${sortingHash}`, (originalPathToDelete) => {  // aspect ratio 3:2
             moveFilesToMongoDB(sortingHash, author, (err, picture) => { // Then save the resized versions to the database
                 fs.unlinkSync(originalPathToDelete); // Delete original image file (the large image that just got uploaded)
                 // When we successfully added the image to the database
