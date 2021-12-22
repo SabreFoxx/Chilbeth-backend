@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const User = mongoose.model('User');
 
 const register = (req, res) => {
-    return res.status(500).json({message: "Registration not allowed!"}); // TODO outcomment this to enable registrations
+    // return res.status(500).json({message: "Registration not allowed!"}); // TODO outcomment this to enable registrations
     if (!req.body.name || !req.body.email || !req.body.password) {
         return res
             .status(400)
@@ -12,7 +12,7 @@ const register = (req, res) => {
     const user = new User();
     user.name = req.body.name;
     user.email = req.body.email;
-    user.admin = false; // TODO set this to true for admin registrations
+    user.admin = true; // TODO set this to true for admin registrations
     user.setPassword(req.body.password);
     user.save((err) => {
         if (err) {
