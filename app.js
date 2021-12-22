@@ -22,10 +22,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize()); // Initialize passport after the static paths
 
 // Setup CORS function properly
-app.use('/', (req, res, next) => { // TODO verify security here
+app.use('/', (req, res, next) => {
   res.header('Access-Control-Allow-Methods', 'GET, POST, DELETE, PUT');
   res.header('Access-Control-Allow-Origin', 'http://localhost:4200');
-  res.header('Access-Control-Allow-Origin', '*');
+  res.header('Access-Control-Allow-Origin', 'http://chinyereodinukwe.com');
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
   next();
 });
@@ -33,7 +33,6 @@ app.use('/', (req, res, next) => { // TODO verify security here
 // Require routers
 var apiRouter = require('./routes/api');
 // Use the routers
-app.use('/api', apiRouter);
 app.use('/', apiRouter);
 
 // Error handler for our api
