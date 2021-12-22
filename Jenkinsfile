@@ -14,6 +14,10 @@ pipeline {
                     sourceFolderPath: './',
                     destinationFolderPath: '/home/jenkins/mount-to-host-folder/Chilbeth-backend'
                 )])
+				// set permissions to allow writing of files
+				// use the jenkins linux user
+				echo 'setting permissions'
+				sh 'runuser -l  jenkins -c "chmod 777 -R /home/jenkins/mount-to-host-folder/Chilbeth-backend/public"'
 			}
 		}
 	}
