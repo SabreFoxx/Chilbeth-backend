@@ -24,7 +24,7 @@ app.set('port', port);
  */
 var server = process.env.SSL_CERTIFICATE_PATH ? https.createServer({
   key: fs.readFileSync(`${process.env.SSL_CERTIFICATE_PATH}/privkey.pem`),
-  cert: fs.readFileSync(`${process.env.SSL_CERTIFICATE_PATH}/cert.pem`)
+  cert: fs.readFileSync(`${process.env.SSL_CERTIFICATE_PATH}/fullchain.pem`)
 }, app) : http.createServer(app);
 
 /**
