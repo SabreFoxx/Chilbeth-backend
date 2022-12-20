@@ -235,11 +235,11 @@ const siteSettingSchema = new mongoose.Schema({
     },
     aboutHeading: {
         type: String,
-        maxlength: 55
+        maxlength: 500
     },
     about: {
         type: String,
-        maxlength: 1000
+        maxlength: 100000
     },
     phone: {
         type: String,
