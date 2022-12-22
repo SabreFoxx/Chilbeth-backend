@@ -16,7 +16,7 @@
     "http-errors": "~1.6.3",
     "image-size": "^0.8.3",
     "jimp": "^0.10.3",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "mongoose": "^4.13.21",
     "morgan": "~1.9.1",
     "passport": "^0.4.1",
